@@ -1,15 +1,20 @@
 import { Stack } from "expo-router";
 
-export default function StackRoutesLayout() {
+export default function StackRoutesLayoutCalendars2025() {
   return (
     <Stack screenOptions={{ headerShown: false}}>
       <Stack.Screen 
-        name="(tabs)"
+        name="superior"
       />
 
       <Stack.Screen 
-        name="(stacks)"
+        name="medio"
+      />
+
+      <Stack.Screen 
+        name="tecnico"
       />
     </Stack>
+    
   )
 }
