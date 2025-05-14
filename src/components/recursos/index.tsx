@@ -9,11 +9,11 @@ const Recursos = () => {
   const backgroundImage = require('../../../assets/backGroundSecundario.png');
 
   const handleNavigateBiblioteca = () => {
-    router.push('../(stacks)/recursos/biblioteca');
+    router.push('/(stacks)/recursos/biblioteca');
   };
 
   const handleNavigateLaboratorio = () => {
-    router.push('../(stacks)/recursos/laboratorio');
+    router.push('/(stacks)/recursos/laboratorio');
   };
 
   return (

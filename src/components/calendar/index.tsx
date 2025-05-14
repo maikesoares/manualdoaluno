@@ -8,27 +8,27 @@ const CalendarAcademico = () => {
   const backgroundImage = require('../../../assets/backGroundSecundario.png');
 
   const handleCalendarSuperior2024 = () => {
-    router.push('../(stacks)/calendar2024/superior');
+    router.push('/(stacks)/calendar2024/superior');
   };
 
   const handleCalendarTecnico2024 = () => {
-    router.push('../(stacks)/calendar2024/tecnico');
+    router.push('/(stacks)/calendar2024/tecnico');
   };
 
   const handleCalendarMedio2024 = () => {
-    router.push('../(stacks)/calendar2024/medio');
+    router.push('/(stacks)/calendar2024/medio');
   };
 
   const handleCalendarSuperior2025 = () => {
-    router.push('../(stacks)/calendar2025/superior');
+    router.push('/(stacks)/calendar2025/superior');
   };
 
   const handleCalendarTecnico2025 = () => {
-    router.push('../(stacks)/calendar2025/tecnico');
+    router.push('/(stacks)/calendar2025/tecnico');
   };
 
   const handleCalendarMedio2025 = () => {
-    router.push('../(stacks)/calendar2025/medio');
+    router.push('/(stacks)/calendar2025/medio');
   };
 
   return (
