@@ -10,7 +10,7 @@ const GridItems: React.FC = () => {
   };
 
   const handleNavigateInfo = () => {
-    router.push('../(stacks)/info');
+    router.push('/(stacks)/info');
   };
 
   const handleNavigateRecursos = () => {
@@ -18,7 +18,7 @@ const GridItems: React.FC = () => {
   };
 
   const handleNavigateServicos = () => {
-    router.push('../(stacks)/servicos');
+    router.push('/(stacks)/servicos');
   };
 
   return (

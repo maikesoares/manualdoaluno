@@ -4,8 +4,8 @@ import { View, StyleSheet, ImageBackground } from 'react-native';
 import useMenuToggle from '~/src/hooks/useMenuToggle';
 import { tintColorBackGround } from '~/src/constants/colors';
 import Sidebar from '~/src/components/sideBar';
-import { Header } from 'react-native/Libraries/NewAppScreen';
 import GridItems from '~/src/components/gridItems';
+import Header from '~/src/components/header';
 
 const HomeScreen: React.FC = () => {
   const { isOpen, animatedValue, toggleMenu, expandedItem, handleItemPress } = useMenuToggle();
@@ -20,7 +20,6 @@ const HomeScreen: React.FC = () => {
           handleItemPress={handleItemPress}
           expandedItem={expandedItem}
         />
-
         <Header toggleMenu={toggleMenu} />
         <GridItems />
       </ImageBackground>
