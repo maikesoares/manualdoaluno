@@ -1,14 +1,51 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { doc, getDoc } from 'firebase/firestore';
 import {
   tintColorBackGround,
   tintColorBlack,
   tintColorGreenDark,
   tintColorWhite,
 } from '~/src/constants/colors';
+import db from '~/utils/firebase';
 
 export default function MissaoEVisaoScreen() {
+  const [missao, setMissao] = useState('');
+  const [visao, setVisao] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMissaoVisao = async () => {
+      try {
+        const docRef = doc(db, 'informacoes', 'missaoEvisao');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setMissao(data.missao);
+          setVisao(data.visao);
+        } else {
+          console.log('Documento não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar missão e visão:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMissaoVisao();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={tintColorGreenDark} />
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.section}>
@@ -16,10 +53,7 @@ export default function MissaoEVisaoScreen() {
           <Icon name="rocket" size={30} color={tintColorGreenDark} style={styles.icon} />
           <Text style={styles.title}>Missão</Text>
         </View>
-        <Text style={styles.subTitle}>
-          A missão do Instituto Federal do Norte de Minas Gerais (IFNMG) é oferecer ensino, pesquisa
-          e extensão de qualidade, com foco na formação cidadã e no desenvolvimento regional.
-        </Text>
+        <Text style={styles.subTitle}>{missao}</Text>
       </View>
 
       <View style={styles.section}>
@@ -27,10 +61,7 @@ export default function MissaoEVisaoScreen() {
           <Icon name="globe" size={30} color={tintColorGreenDark} style={styles.icon} />
           <Text style={styles.title}>Visão</Text>
         </View>
-        <Text style={styles.subTitle}>
-          A visão do IFNMG é ser reconhecido como uma instituição educacional inovadora e
-          sustentável, socialmente inclusiva e articulada com as demandas da sociedade.
-        </Text>
+        <Text style={styles.subTitle}>{visao}</Text>
       </View>
     </ScrollView>
   );
@@ -53,12 +84,10 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 4,
   },
-
   gridIcon: {
     flexDirection: 'row',
     gap: 10,
   },
-
   title: {
     fontSize: 28,
     fontWeight: 'bold',
