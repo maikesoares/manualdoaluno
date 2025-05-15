@@ -1,5 +1,7 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { doc, getDoc } from 'firebase/firestore';
+
 import {
   tintColorBackGround,
   tintColorBlack,
@@ -7,47 +9,63 @@ import {
   tintColorGreenLight,
   tintColorWhite,
 } from '~/src/constants/colors';
+import db from '~/utils/firebase';
 
 export default function HistoriaScreen() {
+  const [conteudo, setConteudo] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHistoria = async () => {
+      try {
+        const docRef = doc(db, 'informacoes', 'historia');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setConteudo(docSnap.data());
+        } else {
+          setConteudo({ introducao: 'Documento não encontrado.' });
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
+        setConteudo({ introducao: 'Erro ao carregar dados.' });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHistoria();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={tintColorGreenLight} />
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.title}>História do IFNMG</Text>
-        <Text style={styles.text}>
-          O Instituto Federal de Educação, Ciência e Tecnologia do Norte de Minas Gerais (IFNMG) foi
-          criado em 29 de dezembro de 2008, pela Lei nº 11.892. A criação do IFNMG foi resultado da
-          reorganização da rede federal de educação profissional, que passou a contar com 38
-          Institutos Federais de Educação, Ciência e Tecnologia (IFETs) em todo o Brasil.
-        </Text>
-        <Text style={styles.text}>
-          O IFNMG é uma autarquia federal vinculada ao Ministério da Educação (MEC). O seu
-          desenvolvimento histórico está relacionado com a história de algumas das instituições que
-          o compõem:
-        </Text>
+        <Text style={styles.title}>{conteudo?.title}</Text>
+
+        <Text style={styles.text}>{conteudo?.introducao}</Text>
+        <Text style={styles.text}>{conteudo?.contexto}</Text>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Escola de Iniciação Agrícola de Salinas</Text>
-          <Text style={styles.text}>
-            A "Pedra Fundamental" da escola foi lançada em 2 de setembro de 1953, a pedido do então
-            deputado federal Dr. Clemente Medrado Fernandes.
-          </Text>
+          <Text style={styles.text}>{conteudo?.escolaSalinas}</Text>
         </View>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Campus Januária</Text>
-          <Text style={styles.text}>
-            A história do campus remonta a outubro de 1960, durante os festejos do centenário do
-            município de Januária. A instituição passou por diversas alterações de nome, sendo
-            inicialmente a Escola Agrícola de Januária, depois Colégio Agrícola de Januária, Escola
-            Agrotécnica Federal de Januária, e por fim Centro Federal de Educação Profissional e
-            Tecnológica (CEFET) Januária.
-          </Text>
+          <Text style={styles.text}>{conteudo?.campusJanuaria}</Text>
         </View>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Campus Pirapora</Text>
-          <Text style={styles.text}>
-            O campus foi criado a partir da integração do CEFET de Januária e da Escola Agrotécnica
-            Federal de Salinas, juntamente com as Unidades de Ensino Descentralizadas (UNEDs) de
-            Almenara, Araçuaí, Arinos e Montes Claros.
-          </Text>
+          <Text style={styles.text}>{conteudo?.campusPirapora}</Text>
         </View>
       </View>
     </ScrollView>
@@ -58,6 +76,12 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    backgroundColor: tintColorBackGround,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: tintColorBackGround,
   },
   card: {
@@ -94,5 +118,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'justify',
     color: tintColorBlack,
+    marginBottom: 12,
   },
 });
