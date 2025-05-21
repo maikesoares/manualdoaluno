@@ -44,9 +44,7 @@ export default function BibliotecaScreen() {
     );
   }
 
-  const openLink = () => {
-    Linking.openURL('https://biblioteca.ifnmg.edu.br');
-  };
+  const linkBiblioteca = dados.conteudo.find((item: any) => item.title === 'LINK')?.link;
 
   return (
     <ScrollView style={styles.container}>
@@ -66,8 +64,8 @@ export default function BibliotecaScreen() {
 
         <Text style={styles.paragraph}>
           Acesso ao catálogo online:{' '}
-          <Text style={styles.link} onPress={openLink}>
-            {dados.conteudo.find((item: any) => item.title === 'LINK')?.link}
+          <Text style={styles.link} onPress={() => Linking.openURL(linkBiblioteca)}>
+            {linkBiblioteca}
           </Text>
         </Text>
       </View>
