@@ -1,15 +1,62 @@
-import React from 'react';
-import { View, Text, Image, ScrollView } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { doc, getDoc } from 'firebase/firestore';
+
 import { servicosStyle } from '~/src/styles/serviceStyle';
+import db from '~/utils/firebase';
 
 export default function ConceitoScreen() {
+  const [conteudo, setConteudo] = useState<{
+    title: string;
+    subtitle: string;
+    texto: string;
+  } | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const carregarConteudo = async () => {
+      try {
+        const docRef = doc(db, 'servicos', 'conceito');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setConteudo(docSnap.data() as any);
+        } else {
+          console.warn('Documento "conceito" não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar conteúdo:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarConteudo();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={servicosStyle.container}>
+        <ActivityIndicator size="large" color="green" />
+      </View>
+    );
+  }
+
+  if (!conteudo) {
+    return (
+      <View style={servicosStyle.container}>
+        <Text>Conteúdo não encontrado.</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={servicosStyle.container}>
       <View style={servicosStyle.header}>
-        <Text style={servicosStyle.title}>ASSISTÊNCIA ESTUDANTIL</Text>
-        <Text style={servicosStyle.subtitle}>O que é isso?</Text>
+        <Text style={servicosStyle.title}>{conteudo.title}</Text>
+        <Text style={servicosStyle.subtitle}>{conteudo.subtitle}</Text>
       </View>
 
       <View style={servicosStyle.iconsRow}>
@@ -23,16 +70,7 @@ export default function ConceitoScreen() {
       </View>
 
       <View style={servicosStyle.content}>
-        <Text style={servicosStyle.text}>
-          A Assistência Estudantil executada no âmbito do IFNMG, que foi construída com fundamento
-          na Política Nacional de Assistência Estudantil – PNAES aprovada pelo Decreto 7.234/2010 e
-          com princípios pautados em valores éticos e humanos, compreende programas, serviços,
-          projetos e ações. O objetivo da Assistência Estudantil é favorecer e ampliar a permanência
-          e o êxito na vida escolar/acadêmica dos discentes matriculados nos cursos regularmente
-          ofertados pelo IFNMG, nos diversos campi, nas perspectivas de educação profissional,
-          técnica e básica, nos níveis médio, superior e de formação inicial e continuada da classe
-          trabalhadora.
-        </Text>
+        <Text style={servicosStyle.text}>{conteudo.texto}</Text>
       </View>
 
       <View style={servicosStyle.footer}>

@@ -1,5 +1,10 @@
-import { StyleSheet } from "react-native";
-import { tintColorBackGround, tintColorBlack, tintColorGreenDark, tintColorWhite } from "../constants/colors";
+import { StyleSheet } from 'react-native';
+import {
+  tintColorBackGround,
+  tintColorBlack,
+  tintColorGreenDark,
+  tintColorWhite,
+} from '../constants/colors';
 
 export const servicosStyle = StyleSheet.create({
   container: {
@@ -13,11 +18,12 @@ export const servicosStyle = StyleSheet.create({
     padding: 16,
     marginVertical: 8,
     elevation: 5,
-    shadowColor: tintColorBlack, 
+    shadowColor: tintColorBlack,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2, 
+    shadowOpacity: 0.2,
     shadowRadius: 6,
     overflow: 'hidden',
+    flex: 1,
   },
   header: {
     alignItems: 'center',
@@ -30,7 +36,7 @@ export const servicosStyle = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: tintColorWhite, 
+    color: tintColorWhite,
     marginLeft: 8,
     textAlign: 'center',
     textShadowColor: '#000',
@@ -39,17 +45,17 @@ export const servicosStyle = StyleSheet.create({
   },
   body: {
     fontSize: 18,
-    color: tintColorBlack, 
+    color: tintColorBlack,
     lineHeight: 24,
     textAlign: 'justify',
   },
 
   bodyText: {
     fontSize: 18,
-    color: tintColorBlack, 
+    color: tintColorBlack,
     lineHeight: 24,
-    textAlign: 'justify', 
-    marginBottom: 12, 
+    textAlign: 'justify',
+    marginBottom: 12,
   },
 
   subtitle: {
