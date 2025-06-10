@@ -1,7 +1,6 @@
 import { collection, getDocs } from 'firebase/firestore';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
-// Função para buscar as informações gerais
 export const fetchInformacoesGerais = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'informacoes_gerais'));

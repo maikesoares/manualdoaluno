@@ -8,15 +8,15 @@ export default function InfoGeraisScreen() {
   const backgroundImage = require('~/assets/backGroundSecundario.png');
 
   const handleNavigateMissaoEVisao = () => {
-    router.push('../(stacks)/info/missaoEVisao');
+    router.push('/(stacks)/info/missaoEVisao');
   };
 
   const handleNavigateHistoria = () => {
-    router.push('../(stacks)/info/historia');
+    router.push('/(stacks)/info/historia');
   };
 
   const handleNavigateContatos = () => {
-    router.push('../(stacks)/info/contatos');
+    router.push('/(stacks)/info/contatos');
   };
 
   return (

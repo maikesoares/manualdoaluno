@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
 export default function ConceitoScreen() {
   const [conteudo, setConteudo] = useState<{

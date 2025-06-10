@@ -9,7 +9,7 @@ import {
   tintColorGreenLight,
   tintColorWhite,
 } from '~/src/constants/colors';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
 export default function HistoriaScreen() {
   const [conteudo, setConteudo] = useState<any>(null);

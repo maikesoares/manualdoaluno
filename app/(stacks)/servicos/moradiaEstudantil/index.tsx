@@ -5,7 +5,7 @@ import { doc, getDoc } from 'firebase/firestore';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
 import { tintColorGreenDark, tintColorWhite } from '~/src/constants/colors';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
 export default function MoradiaEstudantilScreen() {
   const [conteudo, setConteudo] = useState<{

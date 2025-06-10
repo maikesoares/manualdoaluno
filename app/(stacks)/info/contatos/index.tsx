@@ -17,7 +17,7 @@ import {
   tintColorGreenLight,
   tintColorWhite,
 } from '~/src/constants/colors';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
 export default function ContatosScreen() {
   const [contato, setContato] = useState<any>(null);

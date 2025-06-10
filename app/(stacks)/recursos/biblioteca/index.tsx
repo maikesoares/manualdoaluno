@@ -8,7 +8,7 @@ import {
   tintColorGreenDarkOpacity,
   tintColorWhite,
 } from '~/src/constants/colors';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
 export default function BibliotecaScreen() {
   const [dados, setDados] = useState<any>(null);

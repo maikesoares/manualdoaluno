@@ -8,7 +8,7 @@ import {
   tintColorGreenDark,
   tintColorWhite,
 } from '~/src/constants/colors';
-import db from '~/utils/firebase';
+import { db } from '~/utils/firebase';
 
 export default function MissaoEVisaoScreen() {
   const [missao, setMissao] = useState('');

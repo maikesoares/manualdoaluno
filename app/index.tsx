@@ -5,14 +5,18 @@ import { Welcome } from '~/src/components/welcome';
 import { Button } from '~/src/components/button';
 
 export default function WelcomeScreen() {
-  const handleNavigate = () => {
+  const handleNavigateAluno = () => {
     router.replace('/menu');
+  };
+  const handleNavigateAdm = () => {
+    router.replace('/(stacks)/login');
   };
 
   return (
     <View style={styles.main}>
       <Welcome />
-      <Button labelButton={'Iniciar'} onPress={handleNavigate} />
+      <Button labelButton={'Sou Aluno'} onPress={handleNavigateAluno} />
+      <Button labelButton={'Sou ADM'} onPress={handleNavigateAdm} />
     </View>
   );
 }
