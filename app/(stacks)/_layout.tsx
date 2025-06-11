@@ -44,6 +44,13 @@ export default function StackRoutesLayout() {
           title: 'Login do ADM',
         }}
       />
+
+      <Stack.Screen
+        name="editarHistoria"
+        options={{
+          title: 'Editar Historia',
+        }}
+      />
     </Stack>
   );
 }

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Button } from 'react-native';
 import { doc, getDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
+import { auth, db } from '~/utils/firebase';
 import {
   tintColorBackGround,
   tintColorBlack,
@@ -9,11 +11,13 @@ import {
   tintColorGreenLight,
   tintColorWhite,
 } from '~/src/constants/colors';
-import { db } from '~/utils/firebase';
+import { useRouter } from 'expo-router';
 
 export default function HistoriaScreen() {
   const [conteudo, setConteudo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [user] = useAuthState(auth);
 
   useEffect(() => {
     const fetchHistoria = async () => {
@@ -68,6 +72,24 @@ export default function HistoriaScreen() {
           <Text style={styles.text}>{conteudo?.campusPirapora}</Text>
         </View>
       </View>
+      {user && (
+        <Button
+          title="Editar conteúdo"
+          onPress={() =>
+            router.push({
+              pathname: '/(stacks)/editarHistoria',
+              params: {
+                introducao: conteudo?.introducao,
+                contexto: conteudo?.contexto,
+                title: conteudo?.title,
+                escolaSalinas: conteudo?.escolaSalinas,
+                campusPirapora: conteudo?.campusPirapora,
+                campusJanuaria: conteudo?.campusJanuaria,
+              },
+            })
+          }
+        />
+      )}
     </ScrollView>
   );
 }

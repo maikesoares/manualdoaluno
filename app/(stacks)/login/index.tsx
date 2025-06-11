@@ -1,6 +1,17 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { tintColorBlack, tintColorGreenDark, tintColorWhite } from '~/src/constants/colors';
 import { loginWithEmail } from '~/src/services/authService';
 
@@ -20,32 +31,39 @@ export default function AdminLogin() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={80}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Login</Text>
 
-      <Text style={styles.label}>Email</Text>
-      <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Digite seu e-mail"
-        placeholderTextColor="#AAAAAA"
-        style={styles.input}
-      />
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Digite seu e-mail"
+            placeholderTextColor="#AAAAAA"
+            style={styles.input}
+          />
 
-      <Text style={styles.label}>Senha</Text>
-      <TextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Digite sua senha"
-        placeholderTextColor="#AAAAAA"
-        secureTextEntry
-        style={styles.input}
-      />
+          <Text style={styles.label}>Senha</Text>
+          <TextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Digite sua senha"
+            placeholderTextColor="#AAAAAA"
+            secureTextEntry
+            style={styles.input}
+          />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Entrar</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
