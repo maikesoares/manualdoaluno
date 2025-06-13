@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import { doc, getDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -12,6 +19,7 @@ import {
   tintColorWhite,
 } from '~/src/constants/colors';
 import { useRouter } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function HistoriaScreen() {
   const [conteudo, setConteudo] = useState<any>(null);
@@ -73,8 +81,8 @@ export default function HistoriaScreen() {
         </View>
       </View>
       {user && (
-        <Button
-          title="Editar conteúdo"
+        <TouchableOpacity
+          style={styles.editButton}
           onPress={() =>
             router.push({
               pathname: '/(stacks)/editarHistoria',
@@ -87,8 +95,10 @@ export default function HistoriaScreen() {
                 campusJanuaria: conteudo?.campusJanuaria,
               },
             })
-          }
-        />
+          }>
+          <MaterialIcons name="edit" size={20} color={tintColorWhite} />
+          <Text style={styles.editButtonText}>Editar</Text>
+        </TouchableOpacity>
       )}
     </ScrollView>
   );
@@ -141,5 +151,27 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     color: tintColorBlack,
     marginBottom: 12,
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+    backgroundColor: tintColorGreenLight,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignSelf: 'center',
+    shadowColor: tintColorBlack,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  editButtonText: {
+    color: tintColorWhite,
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
