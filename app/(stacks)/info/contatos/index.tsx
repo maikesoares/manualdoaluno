@@ -9,8 +9,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'expo-router';
+
 import {
   tintColorBackGround,
   tintColorBlack,
@@ -22,8 +25,15 @@ import { db } from '~/utils/firebase';
 export default function ContatosScreen() {
   const [contato, setContato] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(getAuth(), (user) => {
+      setIsAuthenticated(!!user); // true se logado
+    });
+
     const fetchContato = async () => {
       try {
         const docRef = doc(db, 'informacoes', 'contato');
@@ -43,6 +53,8 @@ export default function ContatosScreen() {
     };
 
     fetchContato();
+
+    return () => unsubscribeAuth();
   }, []);
 
   const handlePhonePress = () => {
@@ -55,6 +67,19 @@ export default function ContatosScreen() {
     if (contato?.email) {
       Linking.openURL(`mailto:${contato.email}`);
     }
+  };
+
+  const handleEditPress = () => {
+    router.push({
+      pathname: '/(stacks)/editarContato',
+      params: {
+        endereco: contato.endereco,
+        telefone: contato.telefone,
+        email: contato.email,
+        latitude: contato.latitude,
+        longitude: contato.longitude,
+      },
+    });
   };
 
   if (loading) {
@@ -94,8 +119,8 @@ export default function ContatosScreen() {
             }}>
             <Marker
               coordinate={{
-                latitude: contato.latitude || -17.370524,
-                longitude: contato.longitude || -44.956433,
+                latitude: parseFloat(contato.latitude) || -17.370524,
+                longitude: parseFloat(contato.longitude) || -44.956433,
               }}
               title="IFNMG - Campus Pirapora"
               description={contato.endereco}
@@ -112,6 +137,13 @@ export default function ContatosScreen() {
           <MaterialCommunityIcons name="email" size={24} color={tintColorGreenLight} />
           <Text style={styles.infoText}>{contato.email}</Text>
         </TouchableOpacity>
+
+        {isAuthenticated && (
+          <TouchableOpacity style={styles.editButton} onPress={handleEditPress}>
+            <MaterialIcons name="edit" size={20} color={tintColorWhite} />
+            <Text style={styles.editButtonText}>Editar</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
@@ -158,5 +190,20 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: tintColorBlack,
     flex: 1,
+  },
+  editButton: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    backgroundColor: tintColorGreenLight,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  editButtonText: {
+    color: tintColorWhite,
+    marginLeft: 6,
+    fontWeight: 'bold',
   },
 });

@@ -51,6 +51,13 @@ export default function StackRoutesLayout() {
           title: 'Editar Historia',
         }}
       />
+
+      <Stack.Screen
+        name="editarContato"
+        options={{
+          title: 'Editar Contato',
+        }}
+      />
     </Stack>
   );
 }
