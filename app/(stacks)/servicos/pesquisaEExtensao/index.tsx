@@ -1,35 +1,123 @@
-import { View, Text, ScrollView } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons'; // Importando ícones
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+
 import { servicosStyle } from '~/src/styles/serviceStyle';
-import { tintColorWhite } from '~/src/constants/colors';
+import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
+import { db } from '~/utils/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function PesquisaEExtensaoScreen() {
+  const [conteudo, setConteudo] = useState<{
+    title: string;
+    texto: string;
+    subText?: string;
+    subText1?: string;
+    subText2?: string;
+    subText3?: string;
+    download?: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function carregarConteudo() {
+      try {
+        const docRef = doc(db, 'servicos', 'pesquisaEExtensao');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setConteudo(docSnap.data() as any);
+        } else {
+          console.warn('Documento "pesquisaEExtensao" não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar conteúdo:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarConteudo();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={servicosStyle.container}>
+        <ActivityIndicator size="large" color={tintColorGreenDark} />
+      </View>
+    );
+  }
+
+  if (!conteudo) {
+    return (
+      <View style={servicosStyle.container}>
+        <Text>Conteúdo não encontrado.</Text>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView contentContainerStyle={servicosStyle.container}>
-      <View style={servicosStyle.card}>
+    <ScrollView contentContainerStyle={[servicosStyle.container, { flexGrow: 1 }]}>
+      <View style={[servicosStyle.card, { flex: 1, justifyContent: 'space-between' }]}>
         <View style={servicosStyle.header}>
           <FontAwesome name="search" size={50} color={tintColorWhite} />
-          <Text style={servicosStyle.title}>PROGRAMA DE INCENTIVO A PESQUISA E EXTENSÃO</Text>
+          <Text style={servicosStyle.title}>{conteudo.title}</Text>
         </View>
-        <Text style={servicosStyle.body}>
-          Atividades de pesquisa e extensão poderão ser incentivadas, por meio do fomento de ações
-          das áreas supracitadas priorizando o atendimento de estudantes beneciários das ações
-          armativas do IFNMG.
-          {'\n\n'}
-          São objetivos do programa:
-          {'\n\n'}
-          I. Possibilitar a concessão de Bolsas de Iniciação Cientíca, de Iniciação tecnológica e
-          bolsas de Extensão a alunos devidamente matriculados nesta instituição, visando o
-          incentivo aos estudos, à pesquisa e a extensão;
-          {'\n\n'}
-          II. Incentivar a participação dos alunos em atividades que possibilitem a complementação
-          da aprendizagem, através do engajamento em Projetos de Incentivo à pesquisa e a extensão;
-          {'\n\n'}
-          III. Proporcionar ao aluno bolsista, atividades que possibilitem o seu crescimento pessoal
-          e prossional e envolvimento com a comunidade estimulando o desenvolvimento de competências
-          e habilidades voltadas para o mundo do trabalho, da pesquisa e da extensão;
-        </Text>
+
+        <Text style={servicosStyle.body}>{conteudo.texto}</Text>
+
+        {conteudo.subText && (
+          <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText}</Text>
+        )}
+
+        {conteudo.subText1 && (
+          <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText1}</Text>
+        )}
+
+        {conteudo.subText2 && (
+          <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText2}</Text>
+        )}
+
+        {conteudo.subText3 && (
+          <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText3}</Text>
+        )}
+
+        {conteudo.download && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => Linking.openURL(conteudo.download!)}>
+            <Text style={styles.buttonText}>Baixar Arquivo</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: tintColorGreenDark,
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 24,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
+  },
+  buttonText: {
+    color: tintColorWhite,
+    fontWeight: 'bold',
+  },
+});

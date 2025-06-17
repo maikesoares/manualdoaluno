@@ -1,66 +1,111 @@
-import { View, Text, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { doc, getDoc } from 'firebase/firestore';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
-import { tintColorWhite } from '~/src/constants/colors';
+import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
+import { db } from '~/utils/firebase';
 
 export default function MoradiaEstudantilScreen() {
+  const [conteudo, setConteudo] = useState<{
+    title: string;
+    texto: string;
+    subText?: string;
+    download?: string;
+  } | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const carregarConteudo = async () => {
+      try {
+        const docRef = doc(db, 'servicos', 'moradiaEstudantil'); // <-- Nome do documento no Firebase
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setConteudo(docSnap.data() as any);
+        } else {
+          console.warn('Documento "moradiaEstudantil" não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar conteúdo:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarConteudo();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={servicosStyle.container}>
+        <ActivityIndicator size="large" color="green" />
+      </View>
+    );
+  }
+
+  if (!conteudo) {
+    return (
+      <View style={servicosStyle.container}>
+        <Text>Conteúdo não encontrado.</Text>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView contentContainerStyle={servicosStyle.container}>
-      <View style={servicosStyle.card}>
-        <View style={servicosStyle.header}>
-          <FontAwesome name="globe" size={50} color={tintColorWhite} />
-          <Text style={servicosStyle.title}>PROGRAMA DE EDUCAÇÃO PARA A DIVERSIDADE</Text>
+    <ScrollView contentContainerStyle={[servicosStyle.container, { flexGrow: 1 }]}>
+      <View style={[servicosStyle.card, { flex: 1, justifyContent: 'space-between' }]}>
+        <View>
+          <View style={servicosStyle.header}>
+            <FontAwesome name="globe" size={50} color={tintColorWhite} />
+            <Text style={servicosStyle.title}>{conteudo.title}</Text>
+          </View>
+
+          <Text style={servicosStyle.body}>{conteudo.texto}</Text>
+
+          {conteudo.subText && (
+            <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText}</Text>
+          )}
         </View>
-        <Text style={servicosStyle.body}>
-          Este programa tem a nalidade de aprofundar as discussões sobre equidade na Instituição,
-          garantindo espaços de reexão sobre diversidade de etnia, gênero, religião, orientação
-          sexual e, assim como os demais programas, também almeja contribuir no processo de estímulo
-          à permanência nos estudos pelos estudantes, sem perder de vista a perspectiva da discussão
-          sobre direitos e cidadania, destacando a necessidade de desnudar práticas
-          discriminatórias, oriundas da falta de debates e informações, com ações como a criação de
-          grupos de estudos e pesquisa, a exemplo do NEABI
-        </Text>
+
+        {conteudo.download && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => Linking.openURL(conteudo.download!)}>
+            <Text style={styles.buttonText}>Baixar Arquivo</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16,
-//     backgroundColor: '#f1f1f1', // Cor de fundo suave
-//   },
-//   card: {
-//     backgroundColor: '#ffffff', // Fundo branco para o cartão
-//     borderRadius: 12,
-//     padding: 16,
-//     marginVertical: 8,
-//     elevation: 5, // Sombra para destacar o cartão
-//     shadowColor: '#000', // Cor da sombra
-//     shadowOffset: { width: 0, height: 4 }, // Offset da sombra
-//     shadowOpacity: 0.2, // Opacidade da sombra
-//     shadowRadius: 6, // Raio da sombra
-//     overflow: 'hidden', // Garante que a sombra não ultrapasse os limites do cartão
-//   },
-//   header: {
-//     alignItems: 'center',
-//     marginBottom: 16,
-//     padding: 12,
-//     backgroundColor: '#004d40', // Cor de fundo para o cabeçalho
-//     borderRadius: 12,
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     color: '#ffffff', // Cor branca para o título
-//     marginLeft: 8,
-//   },
-//   body: {
-//     fontSize: 16,
-//     color: '#424242', // Cor do texto
-//     lineHeight: 24,
-//     textAlign: 'justify', // Justifica o texto
-//   },
-// });
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: tintColorGreenDark,
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 24,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
+  },
+  buttonText: {
+    color: tintColorWhite,
+    fontWeight: 'bold',
+  },
+});

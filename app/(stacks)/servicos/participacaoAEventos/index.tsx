@@ -1,33 +1,115 @@
-import { View, Text, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+  Linking,
+  StyleSheet,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
-import { tintColorWhite } from '~/src/constants/colors';
+import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
+import { db } from '~/utils/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function ParticipacaoAEventosScreen() {
+  const [conteudo, setConteudo] = useState<{
+    title: string;
+    texto: string;
+    subText?: string;
+    subText1?: string;
+    download?: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function carregarConteudo() {
+      try {
+        const docRef = doc(db, 'servicos', 'participacaoAEventos');
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          setConteudo(docSnap.data() as any);
+        } else {
+          console.warn('Documento "participacaoEventos" não encontrado.');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar conteúdo:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    carregarConteudo();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={servicosStyle.container}>
+        <ActivityIndicator size="large" color={tintColorGreenDark} />
+      </View>
+    );
+  }
+
+  if (!conteudo) {
+    return (
+      <View style={servicosStyle.container}>
+        <Text>Conteúdo não encontrado.</Text>
+      </View>
+    );
+  }
+
   return (
-    <ScrollView contentContainerStyle={servicosStyle.container}>
-      <View style={servicosStyle.card}>
-        <View style={servicosStyle.header}>
-          <FontAwesome name="calendar" size={50} color={tintColorWhite} />
-          <Text style={servicosStyle.title}>
-            PROGRAMA DE INCENTIVO À PARTICIPAÇÃO EM EVENTOS E REUNIÕES DOS ÓRGÃOS COLEGIADOS DO
-            IFNMG
-          </Text>
+    <ScrollView contentContainerStyle={[servicosStyle.container, { flexGrow: 1 }]}>
+      <View style={[servicosStyle.card, { flex: 1, justifyContent: 'space-between' }]}>
+        <View>
+          <View style={servicosStyle.header}>
+            <FontAwesome name="calendar" size={50} color={tintColorWhite} />
+            <Text style={servicosStyle.title}>{conteudo.title}</Text>
+          </View>
+
+          <Text style={servicosStyle.body}>{conteudo.texto}</Text>
+
+          {conteudo.subText && (
+            <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText}</Text>
+          )}
+          {conteudo.subText1 && (
+            <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText1}</Text>
+          )}
         </View>
-        <Text style={servicosStyle.body}>
-          Visa oferecer auxílio nanceiro para ajuda de custo em viagens acadêmicas/escolares, para
-          participação em eventos de natureza acadêmica/escolar, cientíca, tecnológica, desportiva,
-          artística e cultural e participação em órgãos colegiados do IFNMG, no caso de
-          representação discente.
-          {'\n\n'}
-          a) Este programa de incentivo para participação em eventos e nos órgãos colegiados do
-          IFNMG terá normatização própria, assim como as ações relativas às visitas técnicas.
-          {'\n\n'}
-          b) O orçamento para execução deste programa, poderá ser de responsabilidade compartilhada
-          entre as pró-reitorias ediretorias sistêmicas.
-        </Text>
+
+        {conteudo.download && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => Linking.openURL(conteudo.download!)}>
+            <Text style={styles.buttonText}>Baixar Arquivo</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: tintColorGreenDark,
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 24,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
+  },
+  buttonText: {
+    color: tintColorWhite,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
