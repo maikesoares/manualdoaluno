@@ -8,12 +8,14 @@ import {
   Linking,
   StyleSheet,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'expo-router';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
 import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
-import { db } from '~/utils/firebase';
+import { db, auth } from '~/utils/firebase';
 
 export default function ApoioAoEstudanteScreen() {
   const [conteudo, setConteudo] = useState<{
@@ -26,6 +28,8 @@ export default function ApoioAoEstudanteScreen() {
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
 
   useEffect(() => {
     const carregarConteudo = async () => {
@@ -83,6 +87,27 @@ export default function ApoioAoEstudanteScreen() {
             style={styles.button}
             onPress={() => Linking.openURL(conteudo.download!)}>
             <Text style={styles.buttonText}>Baixar Arquivo</Text>
+          </TouchableOpacity>
+        )}
+
+        {user && (
+          <TouchableOpacity
+            style={[styles.button, { marginTop: 16 }]}
+            onPress={() =>
+              router.push({
+                pathname: '/(stacks)/editarApoio',
+                params: {
+                  title: conteudo.title,
+                  texto: conteudo.texto,
+                  permanenciaI: conteudo.permanenciaI,
+                  permanenciaII: conteudo.permanenciaII,
+                  permanenciaIII: conteudo.permanenciaIII,
+                  download: conteudo.download || '',
+                },
+              })
+            }>
+            <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
+            <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
           </TouchableOpacity>
         )}
       </View>
