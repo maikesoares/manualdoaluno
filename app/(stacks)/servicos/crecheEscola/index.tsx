@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'expo-router';
 import { doc, getDoc } from 'firebase/firestore';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
 import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
-import { db } from '~/utils/firebase';
+import { db, auth } from '~/utils/firebase';
 
 export default function CrecheEscolaScreen() {
   const [conteudo, setConteudo] = useState<{
@@ -25,6 +27,8 @@ export default function CrecheEscolaScreen() {
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
 
   useEffect(() => {
     const carregarConteudo = async () => {
@@ -65,8 +69,9 @@ export default function CrecheEscolaScreen() {
 
   return (
     <ScrollView contentContainerStyle={[servicosStyle.container, { flexGrow: 1 }]}>
-      <View style={[servicosStyle.card, { flex: 1, justifyContent: 'space-between' }]}>
-        <View>
+      <View style={{ flex: 1, justifyContent: 'space-between' }}>
+        {/* Conteúdo principal */}
+        <View style={servicosStyle.card}>
           <View style={servicosStyle.header}>
             <FontAwesome name="building" size={50} color={tintColorWhite} />
             <Text style={servicosStyle.title}>{conteudo.title}</Text>
@@ -83,13 +88,36 @@ export default function CrecheEscolaScreen() {
           )}
         </View>
 
-        {conteudo.download && (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => Linking.openURL(conteudo.download!)}>
-            <Text style={styles.buttonText}>Baixar Arquivo</Text>
-          </TouchableOpacity>
-        )}
+        {/* Botões fixos no final da tela */}
+        <View style={{ marginTop: 24 }}>
+          {conteudo.download && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => Linking.openURL(conteudo.download!)}>
+              <Text style={styles.buttonText}>Baixar Arquivo</Text>
+            </TouchableOpacity>
+          )}
+
+          {user && (
+            <TouchableOpacity
+              style={[styles.button, { marginTop: 16 }]}
+              onPress={() =>
+                router.push({
+                  pathname: '/(stacks)/editarCreche',
+                  params: {
+                    title: conteudo.title,
+                    texto: conteudo.texto,
+                    subText: conteudo.subText || '',
+                    subText1: conteudo.subText1 || '',
+                    download: conteudo.download || '',
+                  },
+                })
+              }>
+              <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
+              <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </ScrollView>
   );
