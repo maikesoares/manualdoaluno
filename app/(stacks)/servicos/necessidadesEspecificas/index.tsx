@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'expo-router';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
 import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
-import { db } from '~/utils/firebase';
+import { db, auth } from '~/utils/firebase';
 
 export default function NecessidadesEspecificasScreen() {
   const [conteudo, setConteudo] = useState<{
@@ -24,6 +26,8 @@ export default function NecessidadesEspecificasScreen() {
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
 
   useEffect(() => {
     const carregarConteudo = async () => {
@@ -34,7 +38,7 @@ export default function NecessidadesEspecificasScreen() {
         if (docSnap.exists()) {
           setConteudo(docSnap.data() as any);
         } else {
-          console.warn('Documento "necessidadesEspecificas" não encontrado.');
+          console.warn('Documento "necessidadeEspecifica" não encontrado.');
         }
       } catch (error) {
         console.error('Erro ao buscar conteúdo:', error);
@@ -78,13 +82,33 @@ export default function NecessidadesEspecificasScreen() {
           )}
         </View>
 
-        {conteudo.download && (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => Linking.openURL(conteudo.download!)}>
-            <Text style={styles.buttonText}>Baixar Arquivo</Text>
-          </TouchableOpacity>
-        )}
+        <View>
+          {conteudo.download && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => Linking.openURL(conteudo.download!)}>
+              <Text style={styles.buttonText}>Baixar Arquivo</Text>
+            </TouchableOpacity>
+          )}
+
+          {user && (
+            <TouchableOpacity
+              style={[styles.button, { marginTop: 16 }]}
+              onPress={() =>
+                router.push({
+                  pathname: '/(stacks)/editarNecessidades',
+                  params: {
+                    title: conteudo.title,
+                    texto: conteudo.texto,
+                    download: conteudo.download || '',
+                  },
+                })
+              }>
+              <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
+              <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </ScrollView>
   );

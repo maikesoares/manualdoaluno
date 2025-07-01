@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'expo-router';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
 import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
-import { db } from '~/utils/firebase';
+import { db, auth } from '~/utils/firebase';
 
 export default function ApoioPsicologicoScreen() {
   const [conteudo, setConteudo] = useState<{
@@ -23,6 +25,8 @@ export default function ApoioPsicologicoScreen() {
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
 
   useEffect(() => {
     const carregarConteudo = async () => {
@@ -73,13 +77,33 @@ export default function ApoioPsicologicoScreen() {
           <Text style={servicosStyle.body}>{conteudo.texto}</Text>
         </View>
 
-        {conteudo.download && (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => Linking.openURL(conteudo.download!)}>
-            <Text style={styles.buttonText}>Baixar Arquivo</Text>
-          </TouchableOpacity>
-        )}
+        <View>
+          {conteudo.download && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => Linking.openURL(conteudo.download!)}>
+              <Text style={styles.buttonText}>Baixar Arquivo</Text>
+            </TouchableOpacity>
+          )}
+
+          {user && (
+            <TouchableOpacity
+              style={[styles.button, { marginTop: 16 }]}
+              onPress={() =>
+                router.push({
+                  pathname: '/(stacks)/editarApoioPsicologico',
+                  params: {
+                    title: conteudo.title,
+                    texto: conteudo.texto,
+                    download: conteudo.download || '',
+                  },
+                })
+              }>
+              <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
+              <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </ScrollView>
   );

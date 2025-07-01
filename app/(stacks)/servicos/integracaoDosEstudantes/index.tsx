@@ -8,12 +8,14 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { servicosStyle } from '~/src/styles/serviceStyle';
 import { tintColorWhite, tintColorGreenDark } from '~/src/constants/colors';
-import { db } from '~/utils/firebase';
+import { db, auth } from '~/utils/firebase';
 import { doc, getDoc } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useRouter } from 'expo-router';
 
 export default function IntegracaoDosEstudantesScreen() {
   const [conteudo, setConteudo] = useState<{
@@ -22,6 +24,8 @@ export default function IntegracaoDosEstudantesScreen() {
     download?: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [user] = useAuthState(auth);
+  const router = useRouter();
 
   useEffect(() => {
     async function carregarConteudo() {
@@ -32,7 +36,7 @@ export default function IntegracaoDosEstudantesScreen() {
         if (docSnap.exists()) {
           setConteudo(docSnap.data() as any);
         } else {
-          console.warn('Documento "integracaoEstudantes" não encontrado.');
+          console.warn('Documento "integracaoDosEstudantes" não encontrado.');
         }
       } catch (error) {
         console.error('Erro ao buscar conteúdo:', error);
@@ -72,13 +76,33 @@ export default function IntegracaoDosEstudantesScreen() {
           <Text style={servicosStyle.body}>{conteudo.texto}</Text>
         </View>
 
-        {conteudo.download && (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => Linking.openURL(conteudo.download!)}>
-            <Text style={styles.buttonText}>Baixar Arquivo</Text>
-          </TouchableOpacity>
-        )}
+        <View>
+          {conteudo.download && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => Linking.openURL(conteudo.download!)}>
+              <Text style={styles.buttonText}>Baixar Arquivo</Text>
+            </TouchableOpacity>
+          )}
+
+          {user && (
+            <TouchableOpacity
+              style={[styles.button, { marginTop: 16 }]}
+              onPress={() =>
+                router.push({
+                  pathname: '/(stacks)/editarEstudantesIngressantes',
+                  params: {
+                    title: conteudo.title,
+                    texto: conteudo.texto,
+                    download: conteudo.download || '',
+                  },
+                })
+              }>
+              <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
+              <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </ScrollView>
   );
@@ -89,7 +113,6 @@ const styles = StyleSheet.create({
     backgroundColor: tintColorGreenDark,
     padding: 14,
     borderRadius: 10,
-    marginTop: 24,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
