@@ -147,34 +147,19 @@ export const menuItems: MenuItem[] = [
     title: 'Calendário Acadêmico',
     subItems: [
       {
-        id: '4-1',
-        title: 'Ensino Superior - 2024',
-        onPress: () => router.push('../(stacks)/calendar2024/superior'),
-      },
-      {
-        id: '4-2',
-        title: 'Ensino Médio - 2024',
-        onPress: () => router.push('../(stacks)/calendar2024/medio'),
-      },
-      {
-        id: '4-3',
-        title: 'Curso Técnico - 2024',
-        onPress: () => router.push('../(stacks)/calendar2024/tecnico'),
-      },
-      {
         id: '4-4',
         title: 'Ensino Superior - 2025',
-        onPress: () => router.push('../(stacks)/calendar2025/superior'),
+        onPress: () => router.push('../(stacks)/calendar/superior'),
       },
       {
         id: '4-5',
         title: 'Ensino Médio - 2025',
-        onPress: () => router.push('../(stacks)/calendar2025/medio'),
+        onPress: () => router.push('../(stacks)/calendar/medio'),
       },
       {
         id: '4-6',
         title: 'Curso Técnico - 2025',
-        onPress: () => router.push('../(stacks)/calendar2025/tecnico'),
+        onPress: () => router.push('../(stacks)/calendar/tecnico'),
       },
     ],
   },

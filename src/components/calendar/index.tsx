@@ -7,54 +7,23 @@ import { tintColorBlack, tintColorGreenDark, tintColorWhite } from '~/src/consta
 const CalendarAcademico = () => {
   const backgroundImage = require('../../../assets/backGroundSecundario.png');
 
-  const handleCalendarSuperior2024 = () => {
-    router.push('/(stacks)/calendar2024/superior');
-  };
-
-  const handleCalendarTecnico2024 = () => {
-    router.push('/(stacks)/calendar2024/tecnico');
-  };
-
-  const handleCalendarMedio2024 = () => {
-    router.push('/(stacks)/calendar2024/medio');
-  };
-
   const handleCalendarSuperior2025 = () => {
-    router.push('/(stacks)/calendar2025/superior');
+    router.push('/(stacks)/calendar/superior');
   };
 
   const handleCalendarTecnico2025 = () => {
-    router.push('/(stacks)/calendar2025/tecnico');
+    router.push('/(stacks)/calendar/tecnico');
   };
 
   const handleCalendarMedio2025 = () => {
-    router.push('/(stacks)/calendar2025/medio');
+    router.push('/(stacks)/calendar/medio');
   };
 
   return (
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.gridCalendar}>
-          <Text style={styles.title}>CALENDÁRIO ACADÊMICO ANO LETIVO 2024 - PÓS- GREVE</Text>
-
-          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarSuperior2024}>
-            <Icon name="calendar" size={24} color={tintColorWhite} />
-            <Text style={styles.gridText}>Ensino Superior</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarTecnico2024}>
-            <Icon name="calendar" size={24} color={tintColorWhite} />
-            <Text style={styles.gridText}>Curso Técnico</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarMedio2024}>
-            <Icon name="calendar" size={24} color={tintColorWhite} />
-            <Text style={styles.gridText}>Ensino Médio</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.gridCalendar}>
-          <Text style={styles.title}>CALENDÁRIO ACADÊMICO ANO LETIVO 2025</Text>
+          <Text style={styles.title}>CALENDÁRIO ACADÊMICO ANO LETIVO</Text>
 
           <TouchableOpacity style={styles.gridItem} onPress={handleCalendarSuperior2025}>
             <Icon name="calendar" size={24} color={tintColorWhite} />
