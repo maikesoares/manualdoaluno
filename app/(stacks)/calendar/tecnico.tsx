@@ -1,12 +1,11 @@
-// import React from 'react'
-// import { View } from 'react-native'
-// import { CalendarCursoTecnico2025 } from '~/src/components/calendarCursoTecnico2025'
+import React from 'react';
+import { View } from 'react-native';
+import { CalendarAcademicoTecnico } from '~/src/components/calendar/calendarTecnico';
 
-// export default function CalendarEnsinoTecnicoScreen() {
-
-//   return (
-//     <View style={{flex:1, alignItems:'center', justifyContent: 'center'}}>
-//       <CalendarCursoTecnico2025 />
-//     </View>
-//   )
-// };
+export default function CalendarEnsinoMedioScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <CalendarAcademicoTecnico />
+    </View>
+  );
+}

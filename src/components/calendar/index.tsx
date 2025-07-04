@@ -7,15 +7,15 @@ import { tintColorBlack, tintColorGreenDark, tintColorWhite } from '~/src/consta
 const CalendarAcademico = () => {
   const backgroundImage = require('../../../assets/backGroundSecundario.png');
 
-  const handleCalendarSuperior2025 = () => {
+  const handleCalendarSuperior = () => {
     router.push('/(stacks)/calendar/superior');
   };
 
-  const handleCalendarTecnico2025 = () => {
+  const handleCalendarTecnico = () => {
     router.push('/(stacks)/calendar/tecnico');
   };
 
-  const handleCalendarMedio2025 = () => {
+  const handleCalendarMedio = () => {
     router.push('/(stacks)/calendar/medio');
   };
 
@@ -25,17 +25,17 @@ const CalendarAcademico = () => {
         <View style={styles.gridCalendar}>
           <Text style={styles.title}>CALENDÁRIO ACADÊMICO ANO LETIVO</Text>
 
-          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarSuperior2025}>
+          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarSuperior}>
             <Icon name="calendar" size={24} color={tintColorWhite} />
             <Text style={styles.gridText}>Ensino Superior</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarTecnico2025}>
+          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarTecnico}>
             <Icon name="calendar" size={24} color={tintColorWhite} />
             <Text style={styles.gridText}>Curso Técnico</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarMedio2025}>
+          <TouchableOpacity style={styles.gridItem} onPress={handleCalendarMedio}>
             <Icon name="calendar" size={24} color={tintColorWhite} />
             <Text style={styles.gridText}>Ensino Médio</Text>
           </TouchableOpacity>
