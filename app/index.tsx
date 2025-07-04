@@ -15,8 +15,10 @@ export default function WelcomeScreen() {
   return (
     <View style={styles.main}>
       <Welcome />
-      <Button labelButton={'Sou Aluno'} onPress={handleNavigateAluno} />
-      <Button labelButton={'Sou ADM'} onPress={handleNavigateAdm} />
+      <View style={styles.boxButtom}>
+        <Button labelButton={'Sou Aluno'} onPress={handleNavigateAluno} />
+        <Button labelButton={'Sou ADM'} onPress={handleNavigateAdm} />
+      </View>
     </View>
   );
 }
@@ -28,5 +30,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     textAlign: 'center',
+  },
+  boxButtom: {
+    gap: 15,
   },
 });

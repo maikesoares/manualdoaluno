@@ -36,6 +36,7 @@ const CalendarAcademicoTecnico: React.FC = () => {
   const [eventoData, setEventoData] = useState('');
   const [eventoDescricao, setEventoDescricao] = useState('');
   const [eventoCor, setEventoCor] = useState('#228B22');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     verificarAdmin();
@@ -47,6 +48,7 @@ const CalendarAcademicoTecnico: React.FC = () => {
     const user = auth.currentUser;
 
     if (user) {
+      setIsLoggedIn(true);
       const userRef = doc(db, 'usuarios', user.uid);
       const userSnap = await getDoc(userRef);
 
@@ -54,6 +56,8 @@ const CalendarAcademicoTecnico: React.FC = () => {
         const data = userSnap.data();
         setIsAdmin(data.isAdmin === true);
       }
+    } else {
+      setIsLoggedIn(false);
     }
   }
 
@@ -137,6 +141,27 @@ const CalendarAcademicoTecnico: React.FC = () => {
     );
   };
 
+  function formatarMesAno(mesAno: string): string {
+    const [ano, mes] = mesAno.split('-').map(Number);
+
+    const nomeMeses = [
+      'Janeiro',
+      'Fevereiro',
+      'Março',
+      'Abril',
+      'Maio',
+      'Junho',
+      'Julho',
+      'Agosto',
+      'Setembro',
+      'Outubro',
+      'Novembro',
+      'Dezembro',
+    ];
+
+    return `${nomeMeses[mes - 1]} de ${ano}`;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Calendar
@@ -160,7 +185,8 @@ const CalendarAcademicoTecnico: React.FC = () => {
       />
 
       <View style={styles.legendaContainer}>
-        <Text style={styles.legendaTitulo}>Eventos de {mesAtual}</Text>
+        <Text style={styles.legendaTitulo}>Eventos de {formatarMesAno(mesAtual)}</Text>
+
         <ScrollView style={styles.legendaScroll}>
           {eventosFiltrados.length === 0 ? (
             <Text style={styles.semEvento}>Nenhum evento neste mês.</Text>
@@ -195,17 +221,21 @@ const CalendarAcademicoTecnico: React.FC = () => {
               editable={isAdmin}
             />
 
-            <Text style={styles.label}>Cor (hex):</Text>
-            <TextInput
-              style={styles.input}
-              value={eventoCor}
-              onChangeText={setEventoCor}
-              placeholder="#006633"
-              maxLength={7}
-              editable={isAdmin}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
+            {isLoggedIn && (
+              <>
+                <Text style={styles.label}>Cor (hex):</Text>
+                <TextInput
+                  style={styles.input}
+                  value={eventoCor}
+                  onChangeText={setEventoCor}
+                  placeholder="#006633"
+                  maxLength={7}
+                  editable={isAdmin}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </>
+            )}
 
             <View style={styles.modalButtons}>
               {isAdmin && (

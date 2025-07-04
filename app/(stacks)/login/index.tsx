@@ -37,30 +37,37 @@ export default function AdminLogin() {
       keyboardVerticalOffset={80}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
-          <Text style={styles.title}>Login</Text>
+          <Text style={styles.title}>Bem-vindo!</Text>
+          <Text style={styles.subtitle}>Faça login para continuar</Text>
 
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Digite seu e-mail"
-            placeholderTextColor="#AAAAAA"
-            style={styles.input}
-          />
+          <View style={styles.form}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Digite seu e-mail"
+              placeholderTextColor="#999"
+              style={styles.input}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              returnKeyType="next"
+            />
 
-          <Text style={styles.label}>Senha</Text>
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Digite sua senha"
-            placeholderTextColor="#AAAAAA"
-            secureTextEntry
-            style={styles.input}
-          />
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Digite sua senha"
+              placeholderTextColor="#999"
+              secureTextEntry
+              style={styles.input}
+              returnKeyType="done"
+            />
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Entrar</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Entrar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -71,38 +78,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: tintColorWhite,
-    padding: 20,
     justifyContent: 'center',
+    paddingHorizontal: 24,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     color: tintColorGreenDark,
     fontWeight: 'bold',
-    marginBottom: 30,
     textAlign: 'center',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  form: {
+    backgroundColor: '#F9F9F9',
+    borderRadius: 12,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     color: tintColorGreenDark,
-    marginBottom: 5,
+    marginBottom: 6,
   },
   input: {
+    height: 48,
+    borderColor: '#CCC',
     borderWidth: 1,
-    borderColor: tintColorGreenDark,
     borderRadius: 8,
-    padding: 10,
-    marginBottom: 20,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    backgroundColor: '#FFF',
     color: tintColorBlack,
   },
   button: {
     backgroundColor: tintColorGreenDark,
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 8,
   },
   buttonText: {
     color: tintColorWhite,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
