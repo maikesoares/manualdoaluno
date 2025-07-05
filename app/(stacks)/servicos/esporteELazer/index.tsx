@@ -21,6 +21,9 @@ export default function EsporteELazerScreen() {
   const [conteudo, setConteudo] = useState<{
     title: string;
     texto: string;
+    subText: string;
+    subText1: string;
+    subText2: string;
     download?: string;
   } | null>(null);
 
@@ -35,7 +38,14 @@ export default function EsporteELazerScreen() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setConteudo(docSnap.data() as any);
+          setConteudo({
+            title: '',
+            texto: '',
+            subText: '',
+            subText1: '',
+            subText2: '',
+            ...docSnap.data(),
+          } as any);
         } else {
           console.warn('Documento "esporteELazer" não encontrado.');
         }
@@ -66,16 +76,20 @@ export default function EsporteELazerScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={[servicosStyle.container, { flexGrow: 1 }]}>
-      <View style={[servicosStyle.card, { flex: 1, justifyContent: 'space-between' }]}>
-        <View>
-          <View style={servicosStyle.header}>
-            <FontAwesome name="soccer-ball-o" size={50} color={tintColorWhite} />
-            <Text style={servicosStyle.title}>{conteudo.title}</Text>
-          </View>
-
-          <Text style={servicosStyle.body}>{conteudo.texto}</Text>
+    <ScrollView contentContainerStyle={servicosStyle.container}>
+      <View style={servicosStyle.card}>
+        <View style={servicosStyle.header}>
+          <FontAwesome name="soccer-ball-o" size={40} color={tintColorWhite} />
+          <Text style={servicosStyle.title}>{conteudo.title}</Text>
         </View>
+
+        <Text style={servicosStyle.body}>
+          {conteudo.texto}
+          {'\n'}
+        </Text>
+        <Text style={servicosStyle.body}>{conteudo.subText}</Text>
+        <Text style={servicosStyle.body}>{conteudo.subText1}</Text>
+        <Text style={servicosStyle.body}>{conteudo.subText2}</Text>
 
         {conteudo.download && (
           <TouchableOpacity
@@ -94,6 +108,9 @@ export default function EsporteELazerScreen() {
                 params: {
                   title: conteudo.title,
                   texto: conteudo.texto,
+                  subText: conteudo.subText,
+                  subText1: conteudo.subText1,
+                  subText2: conteudo.subText2,
                   download: conteudo.download || '',
                 },
               })
@@ -110,16 +127,12 @@ export default function EsporteELazerScreen() {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: tintColorGreenDark,
-    padding: 14,
-    borderRadius: 10,
-    marginTop: 24,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
   },
   buttonText: {
     color: tintColorWhite,

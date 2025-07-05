@@ -21,9 +21,12 @@ export default function AuxilioEmergencialScreen() {
   const [conteudo, setConteudo] = useState<{
     title: string;
     texto: string;
-    subText?: string;
+    subText: string;
+    subText1: string;
+    subText2: string;
     download?: string;
   } | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [user] = useAuthState(auth);
   const router = useRouter();
@@ -35,7 +38,14 @@ export default function AuxilioEmergencialScreen() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setConteudo(docSnap.data() as any);
+          setConteudo({
+            title: '',
+            texto: '',
+            subText: '',
+            subText1: '',
+            subText2: '',
+            ...docSnap.data(),
+          } as any);
         } else {
           console.warn('Documento "auxilioEmergencial" não encontrado.');
         }
@@ -66,49 +76,49 @@ export default function AuxilioEmergencialScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={[servicosStyle.container, { flexGrow: 1 }]}>
-      <View style={[servicosStyle.card, { flex: 1, justifyContent: 'space-between' }]}>
-        <View>
-          <View style={servicosStyle.header}>
-            <FontAwesome name="plus-square" size={50} color={tintColorWhite} />
-            <Text style={servicosStyle.title}>{conteudo.title}</Text>
-          </View>
-
-          <Text style={servicosStyle.body}>{conteudo.texto}</Text>
-
-          {conteudo.subText && (
-            <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText}</Text>
-          )}
+    <ScrollView contentContainerStyle={servicosStyle.container}>
+      <View style={servicosStyle.card}>
+        <View style={servicosStyle.header}>
+          <FontAwesome name="plus-square" size={40} color={tintColorWhite} />
+          <Text style={servicosStyle.title}>{conteudo.title}</Text>
         </View>
 
-        <View>
-          {conteudo.download && (
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => Linking.openURL(conteudo.download!)}>
-              <Text style={styles.buttonText}>Baixar Arquivo</Text>
-            </TouchableOpacity>
-          )}
+        <Text style={servicosStyle.body}>
+          {conteudo.texto}
+          {'\n'}
+        </Text>
+        <Text style={servicosStyle.body}>{conteudo.subText}</Text>
+        <Text style={servicosStyle.body}>{conteudo.subText1}</Text>
+        <Text style={servicosStyle.body}>{conteudo.subText2}</Text>
 
-          {user && (
-            <TouchableOpacity
-              style={[styles.button, { marginTop: 16 }]}
-              onPress={() =>
-                router.push({
-                  pathname: '/(stacks)/editarAuxilioEmergencial',
-                  params: {
-                    title: conteudo.title,
-                    texto: conteudo.texto,
-                    subText: conteudo.subText || '',
-                    download: conteudo.download || '',
-                  },
-                })
-              }>
-              <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
-              <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        {conteudo.download && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => Linking.openURL(conteudo.download!)}>
+            <Text style={styles.buttonText}>Baixar Arquivo</Text>
+          </TouchableOpacity>
+        )}
+
+        {user && (
+          <TouchableOpacity
+            style={[styles.button, { marginTop: 16 }]}
+            onPress={() =>
+              router.push({
+                pathname: '/(stacks)/editarAuxilioEmergencial',
+                params: {
+                  title: conteudo.title,
+                  texto: conteudo.texto,
+                  subText: conteudo.subText,
+                  subText1: conteudo.subText1,
+                  subText2: conteudo.subText2,
+                  download: conteudo.download || '',
+                },
+              })
+            }>
+            <MaterialCommunityIcons name="square-edit-outline" size={20} color={tintColorWhite} />
+            <Text style={[styles.buttonText, { marginLeft: 8 }]}>Editar conteúdo</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
@@ -117,15 +127,12 @@ export default function AuxilioEmergencialScreen() {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: tintColorGreenDark,
-    padding: 14,
-    borderRadius: 10,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 4,
   },
   buttonText: {
     color: tintColorWhite,

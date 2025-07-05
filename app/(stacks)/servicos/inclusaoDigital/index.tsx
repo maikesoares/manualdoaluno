@@ -21,7 +21,9 @@ export default function InclusaoDigitalScreen() {
   const [conteudo, setConteudo] = useState<{
     title: string;
     texto: string;
-    subText?: string;
+    subText: string;
+    subText1: string;
+    subText2: string;
     download?: string;
   } | null>(null);
 
@@ -36,7 +38,14 @@ export default function InclusaoDigitalScreen() {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setConteudo(docSnap.data() as any);
+          setConteudo({
+            title: '',
+            texto: '',
+            subText: '',
+            subText1: '',
+            subText2: '',
+            ...docSnap.data(),
+          } as any);
         } else {
           console.warn('Documento "inclusaoDigital" não encontrado.');
         }
@@ -70,15 +79,23 @@ export default function InclusaoDigitalScreen() {
     <ScrollView contentContainerStyle={servicosStyle.container}>
       <View style={servicosStyle.card}>
         <View style={servicosStyle.header}>
-          <FontAwesome name="laptop" size={50} color={tintColorWhite} />
+          <FontAwesome name="laptop" size={40} color={tintColorWhite} />
           <Text style={servicosStyle.title}>{conteudo.title}</Text>
         </View>
 
-        <Text style={servicosStyle.body}>{conteudo.texto}</Text>
-
-        {conteudo.subText && (
-          <Text style={[servicosStyle.body, { marginTop: 16 }]}>{conteudo.subText}</Text>
-        )}
+        <Text style={servicosStyle.body}>
+          {conteudo.texto}
+          {'\n'}
+        </Text>
+        <Text style={servicosStyle.body}>
+          {conteudo.subText}
+          {'\n'}
+        </Text>
+        <Text style={servicosStyle.body}>
+          {conteudo.subText1}
+          {'\n'}
+        </Text>
+        <Text style={servicosStyle.body}>{conteudo.subText2}</Text>
 
         {conteudo.download && (
           <TouchableOpacity
@@ -97,6 +114,9 @@ export default function InclusaoDigitalScreen() {
                 params: {
                   title: conteudo.title,
                   texto: conteudo.texto,
+                  subText: conteudo.subText,
+                  subText1: conteudo.subText1,
+                  subText2: conteudo.subText2,
                   download: conteudo.download || '',
                 },
               })
