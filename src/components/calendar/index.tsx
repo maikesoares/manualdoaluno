@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { tintColorBlack, tintColorGreenDark, tintColorWhite } from '~/src/constants/colors';
 
 const CalendarAcademico = () => {
-  const backgroundImage = require('../../../assets/backGroundSecundario.png');
+  const backgroundImage = require('../../../assets/backGroundSecundario.jpg');
 
   const handleCalendarSuperior = () => {
     router.push('/(stacks)/calendar/superior');

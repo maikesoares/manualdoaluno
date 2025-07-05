@@ -46,7 +46,7 @@ const services: Service[] = [
 ];
 
 export default function ServicosScreen() {
-  const backgroundImage = require('~/assets/backGroundSecundario.png');
+  const backgroundImage = require('~/assets/backGroundSecundario.jpg');
 
   const handleNavigate = (path: string) => {
     router.push(`../(stacks)/servicos/${path}`);

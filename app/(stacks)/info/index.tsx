@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { tintColorBlack, tintColorGreenDark, tintColorWhite } from '~/src/constants/colors';
 
 export default function InfoGeraisScreen() {
-  const backgroundImage = require('~/assets/backGroundSecundario.png');
+  const backgroundImage = require('~/assets/backGroundSecundario.jpg');
 
   const handleNavigateMissaoEVisao = () => {
     router.push('/(stacks)/info/missaoEVisao');

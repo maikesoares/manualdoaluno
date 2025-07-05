@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { tintColorBlack, tintColorGreenDark, tintColorWhite } from '~/src/constants/colors';
 
 const Recursos = () => {
-  const backgroundImage = require('../../../assets/backGroundSecundario.png');
+  const backgroundImage = require('../../../assets/backGroundSecundario.jpg');
 
   const handleNavigateBiblioteca = () => {
     router.push('/(stacks)/recursos/biblioteca');
