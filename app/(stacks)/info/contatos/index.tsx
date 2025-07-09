@@ -8,7 +8,7 @@ import {
   Linking,
   ActivityIndicator,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { WebView } from 'react-native-webview';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { doc, getDoc } from 'firebase/firestore';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
@@ -31,7 +31,7 @@ export default function ContatosScreen() {
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(getAuth(), (user) => {
-      setIsAuthenticated(!!user); // true se logado
+      setIsAuthenticated(!!user);
     });
 
     const fetchContato = async () => {
@@ -98,6 +98,27 @@ export default function ContatosScreen() {
     );
   }
 
+  const latitude = parseFloat(contato.latitude) || -17.370524;
+  const longitude = parseFloat(contato.longitude) || -44.956433;
+
+  const mapHtml = `
+    <!DOCTYPE html>
+    <html>
+      <head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+      <body style="margin:0;padding:0;">
+        <iframe
+          width="100%"
+          height="100%"
+          frameborder="0"
+          scrolling="no"
+          marginheight="0"
+          marginwidth="0"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.002}%2C${latitude - 0.002}%2C${longitude + 0.002}%2C${latitude + 0.002}&layer=mapnik&marker=${latitude}%2C${longitude}">
+        </iframe>
+      </body>
+    </html>
+  `;
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.card}>
@@ -109,23 +130,7 @@ export default function ContatosScreen() {
         </TouchableOpacity>
 
         <View style={styles.mapContainer}>
-          <MapView
-            style={styles.map}
-            initialRegion={{
-              latitude: parseFloat(contato.latitude) || -17.370524,
-              longitude: parseFloat(contato.longitude) || -44.956433,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}>
-            <Marker
-              coordinate={{
-                latitude: parseFloat(contato.latitude) || -17.370524,
-                longitude: parseFloat(contato.longitude) || -44.956433,
-              }}
-              title="IFNMG - Campus Pirapora"
-              description={contato.endereco}
-            />
-          </MapView>
+          <WebView originWhitelist={['*']} source={{ html: mapHtml }} style={styles.map} />
         </View>
 
         <TouchableOpacity style={styles.infoContainer} onPress={handlePhonePress}>

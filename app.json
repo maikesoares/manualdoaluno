@@ -3,7 +3,6 @@
     "name": "manualdoaluno",
     "slug": "manualdoaluno",
     "version": "1.0.0",
-
     "scheme": "manualdoaluno",
     "web": {
       "bundler": "metro",
@@ -13,15 +12,11 @@
     "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true,
-
       "tsconfigPaths": true
     },
-
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-
     "userInterfaceStyle": "light",
-
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -35,6 +30,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.maikesoares.manualdoaluno"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "593b3c40-2433-4e6c-860a-bb2729be349e"
       }
     }
   }
